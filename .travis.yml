@@ -1,0 +1,33 @@
+language: android
+
+android:
+  components:
+    - build-tools-20.0.0
+    - android-16
+  licenses:
+    - android-sdk-license-5be876d5
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+after_success:
+  - .buildscript/deploy_snapshot.sh
+
+env:
+  global:
+    - secure: "FOFePeG2wW7DkSFKWGqypEs4sKPfII+SXHRBl/aj2ay5x3rbjnYyFLRRGtuYUYF5JyhdF3MkVBvwVur9T+JtYiZVlHEcXFZYLbo6rcVkdI8mhk012qAVpPVx8uWtjh8Z5zxYmYNhiPZeHC7dZYORh2vziAv4fYalpNtj3Kn4uf4="
+    - secure: "EPQMJXyYMGJBciPXzOn/dQJ/co+yMy/euZEEs0J5GzbPx6zo/YAnJPRtdkd/l/qI6OHP1hSsdSR4wuPwa9+UysSAzUE+6sSzWy8CfXVwpdML3CDOnZvj3bpVXIGmAKiTVfBJt8186F2TmhmEkylyWMweQqwsvwqmhXj03cgzVe8="
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2
