@@ -9,7 +9,7 @@ Usage
 
 * Create an instance of a Cartographer object.
 ```java
-Cartographer cartographer = new Cartographer.Builder().setLenient(true|false).build();
+Cartographer cartographer = new Cartographer.Builder().lenient(true|false).prettyPrint(true|false).build();
 ```
 
 * Encode Java Maps
