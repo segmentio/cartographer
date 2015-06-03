@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -143,6 +144,34 @@ public class CartographerTest {
         .build();
 
     assertThat(map).isEqualTo(expected);
+  }
+
+  @Test public void encodesArrays() throws IOException {
+    Map<String, Object> map =
+        ImmutableMap.<String, Object>builder().put("a", Arrays.asList("b", "c", "d")).build();
+
+    assertThat(cartographer.toJson(map)).isEqualTo("{\n"
+        + "  \"a\": [\n"
+        + "    \"b\",\n"
+        + "    \"c\",\n"
+        + "    \"d\"\n"
+        + "  ]\n"
+        + "}");
+  }
+
+  @Test public void decodesArrays() throws IOException {
+    String json = "{\n"
+        + "  \"a\": [\n"
+        + "    \"b\",\n"
+        + "    \"c\",\n"
+        + "    \"d\"\n"
+        + "  ]\n"
+        + "}";
+
+    Map<String, Object> expected =
+        ImmutableMap.<String, Object>builder().put("a", Arrays.asList("b", "c", "d")).build();
+
+    assertThat(cartographer.fromJson(json)).isEqualTo(expected);
   }
 
   @Test public void disallowsEncodingNullMap() throws IOException {
