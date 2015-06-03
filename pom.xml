@@ -24,7 +24,6 @@
 
   <modules>
     <module>cartographer</module>
-    <module>cartographer-sample</module>
     <module>cartographer-benchmarks</module>
   </modules>
 
