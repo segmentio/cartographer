@@ -1,5 +1,6 @@
 package com.segment.cartographer;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -25,21 +26,19 @@ public class CartographerTest {
   }
 
   @Test public void encodesPrimitives() throws IOException {
-    StringWriter writer = new StringWriter();
-    Map<String, Object> map = new LinkedHashMap<String, Object>();
-    map.put("byte", (byte) 32);
-    map.put("boolean", true);
-    map.put("short", (short) 100);
-    map.put("int", 1);
-    map.put("long", 43L);
-    map.put("float", 23f);
-    map.put("double", Math.PI);
-    map.put("char", 'a');
-    map.put("String", "string");
+    Map<String, Object> map = ImmutableMap.<String, Object>builder()
+        .put("byte", (byte) 32)
+        .put("boolean", true)
+        .put("short", (short) 100)
+        .put("int", 1)
+        .put("long", 43L)
+        .put("float", 23f)
+        .put("double", Math.PI)
+        .put("char", 'a')
+        .put("String", "string")
+        .build();
 
-    cartographer.toJson(map, writer);
-
-    assertThat(writer.toString()).isEqualTo("{"
+    assertThat(cartographer.toJson(map)).isEqualTo("{"
         + "\"byte\":32,"
         + "\"boolean\":true,"
         + "\"short\":100,"
