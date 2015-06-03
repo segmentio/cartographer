@@ -53,6 +53,12 @@ public class Cartographer {
    * form instead of a {@link String}, use {@link #fromJson(Reader)} instead.
    */
   public Map<String, Object> fromJson(String json) throws IOException {
+    if (json == null) {
+      throw new IllegalArgumentException("json == null");
+    }
+    if (json.length() == 0) {
+      throw new IllegalArgumentException("json empty");
+    }
     return fromJson(new StringReader(json));
   }
 
@@ -62,6 +68,9 @@ public class Cartographer {
    * #fromJson(String)} instead.
    */
   public Map<String, Object> fromJson(Reader reader) throws IOException {
+    if (reader == null) {
+      throw new IllegalArgumentException("reader == null");
+    }
     JsonReader jsonReader = new JsonReader(reader);
     jsonReader.setLenient(isLenient);
     try {
@@ -89,6 +98,9 @@ public class Cartographer {
   public void toJson(Map<?, ?> map, Writer writer) throws IOException {
     if (map == null) {
       throw new IllegalArgumentException("map == null");
+    }
+    if (writer == null) {
+      throw new IllegalArgumentException("writer == null");
     }
 
     JsonWriter jsonWriter = new JsonWriter(writer);

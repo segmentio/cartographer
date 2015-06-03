@@ -1,6 +1,7 @@
 package com.segment.cartographer;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -49,6 +50,78 @@ public class CartographerTest {
         + "\"char\":\"a\","
         + "\"String\":\"string\""
         + "}");
+  }
+
+  @Test public void decodesPrimitives() throws IOException {
+    String json = "{"
+        + "\"byte\":32,"
+        + "\"boolean\":true,"
+        + "\"short\":100,"
+        + "\"int\":1,"
+        + "\"long\":43,"
+        + "\"float\":23.0,"
+        + "\"double\":3.141592653589793,"
+        + "\"char\":\"a\","
+        + "\"String\":\"string\""
+        + "}";
+
+    Map<String, Object> map = cartographer.fromJson(json);
+
+    assertThat(map).hasSize(9)
+        .contains(MapEntry.entry("byte", 32.0))
+        .contains(MapEntry.entry("boolean", true))
+        .contains(MapEntry.entry("short", 100.0))
+        .contains(MapEntry.entry("int", 1.0))
+        .contains(MapEntry.entry("long", 43.0))
+        .contains(MapEntry.entry("float", 23.0))
+        .contains(MapEntry.entry("double", Math.PI))
+        .contains(MapEntry.entry("char", "a"))
+        .contains(MapEntry.entry("String", "string"));
+  }
+
+  @Test public void disallowsEncodingNullMap() throws IOException {
+    try {
+      cartographer.toJson(null, new StringWriter());
+      fail("null map should throw Exception");
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("map == null");
+    }
+  }
+
+  @Test public void disallowsEncodingToNullWriter() throws IOException {
+    try {
+      cartographer.toJson(new LinkedHashMap<Object, Object>(), null);
+      fail("null writer should throw Exception");
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("writer == null");
+    }
+  }
+
+  @Test public void disallowsDecodingNullReader() throws IOException {
+    try {
+      cartographer.fromJson((Reader) null);
+      fail("null map should throw Exception");
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("reader == null");
+    }
+  }
+
+  @Test public void disallowsDecodingNullString() throws IOException {
+    try {
+      cartographer.fromJson((String) null);
+      fail("null map should throw Exception");
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("json == null");
+    }
+  }
+
+  @Test public void disallowsDecodingEmptyString() throws IOException {
+    try {
+      cartographer.fromJson("");
+      fail("null map should throw Exception");
+    } catch (IllegalArgumentException e) {
+      assertThat(e).hasMessage("json empty");
+    }
   }
 
   @Test public void encodesNumberMax() throws IOException {
@@ -106,41 +179,5 @@ public class CartographerTest {
     }
     StringWriter writer = new StringWriter();
     cartographer.toJson(map, writer);
-  }
-
-  @Test public void disallowsNullMap() throws IOException {
-    try {
-      cartographer.toJson(null, new StringWriter());
-      fail("null map should throw Exception");
-    } catch (IllegalArgumentException e) {
-      assertThat(e).hasMessage("map == null");
-    }
-  }
-
-  @Test public void decodesPrimitives() throws IOException {
-    String json = "{"
-        + "\"byte\":32,"
-        + "\"boolean\":true,"
-        + "\"short\":100,"
-        + "\"int\":1,"
-        + "\"long\":43,"
-        + "\"float\":23.0,"
-        + "\"double\":3.141592653589793,"
-        + "\"char\":\"a\","
-        + "\"String\":\"string\""
-        + "}";
-
-    Map<String, Object> map = cartographer.fromJson(json);
-
-    assertThat(map).hasSize(9)
-        .contains(MapEntry.entry("byte", 32.0))
-        .contains(MapEntry.entry("boolean", true))
-        .contains(MapEntry.entry("short", 100.0))
-        .contains(MapEntry.entry("int", 1.0))
-        .contains(MapEntry.entry("long", 43.0))
-        .contains(MapEntry.entry("float", 23.0))
-        .contains(MapEntry.entry("double", Math.PI))
-        .contains(MapEntry.entry("char", "a"))
-        .contains(MapEntry.entry("String", "string"));
   }
 }
