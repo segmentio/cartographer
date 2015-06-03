@@ -120,7 +120,7 @@ public class Cartographer {
   // Decoding
 
   /** Reads the {@link JsonReader} into a {@link Map}. */
-  private Map<String, Object> readerToMap(JsonReader reader) throws IOException {
+  private static Map<String, Object> readerToMap(JsonReader reader) throws IOException {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     reader.beginObject();
     while (reader.hasNext()) {
@@ -131,7 +131,7 @@ public class Cartographer {
   }
 
   /** Reads the {@link JsonReader} into a {@link List}. */
-  private List<Object> readerToList(JsonReader reader) throws IOException {
+  private static List<Object> readerToList(JsonReader reader) throws IOException {
     // todo: try to infer the type of the List?
     List<Object> list = new ArrayList<Object>();
     reader.beginArray();
@@ -143,7 +143,7 @@ public class Cartographer {
   }
 
   /** Reads the next value in the {@link JsonReader}. */
-  private Object readValue(JsonReader reader) throws IOException {
+  private static Object readValue(JsonReader reader) throws IOException {
     JsonToken token = reader.peek();
     switch (token) {
       case BEGIN_OBJECT:
@@ -167,7 +167,7 @@ public class Cartographer {
   // Encoding
 
   /** Encode the given {@link Map} into the {@link JsonWriter}. */
-  private void mapToWriter(Map<?, ?> map, JsonWriter writer) throws IOException {
+  private static void mapToWriter(Map<?, ?> map, JsonWriter writer) throws IOException {
     writer.beginObject();
     for (Map.Entry<?, ?> entry : map.entrySet()) {
       writer.name(String.valueOf(entry.getKey()));
@@ -177,7 +177,7 @@ public class Cartographer {
   }
 
   /** Print the json representation of a List to the given writer. */
-  private void listToWriter(List<?> list, JsonWriter writer) throws IOException {
+  private static void listToWriter(List<?> list, JsonWriter writer) throws IOException {
     writer.beginArray();
     for (Object value : list) {
       writeValue(value, writer);
@@ -190,7 +190,7 @@ public class Cartographer {
    *
    * @throws IOException
    */
-  private void writeValue(Object value, JsonWriter writer) throws IOException {
+  private static void writeValue(Object value, JsonWriter writer) throws IOException {
     if (value == null) {
       writer.nullValue();
     } else if (value instanceof Number) {
