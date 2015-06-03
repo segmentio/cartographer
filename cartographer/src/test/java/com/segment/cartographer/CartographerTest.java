@@ -22,7 +22,7 @@ public class CartographerTest {
   Cartographer cartographer;
 
   @Before public void setUp() {
-    cartographer = new Cartographer.Builder().build();
+    cartographer = new Cartographer.Builder().lenient(false).prettyPrint(true).build();
   }
 
   @Test public void encodesPrimitives() throws IOException {
@@ -38,30 +38,30 @@ public class CartographerTest {
         .put("String", "string")
         .build();
 
-    assertThat(cartographer.toJson(map)).isEqualTo("{"
-        + "\"byte\":32,"
-        + "\"boolean\":true,"
-        + "\"short\":100,"
-        + "\"int\":1,"
-        + "\"long\":43,"
-        + "\"float\":23.0,"
-        + "\"double\":3.141592653589793,"
-        + "\"char\":\"a\","
-        + "\"String\":\"string\""
+    assertThat(cartographer.toJson(map)).isEqualTo("{\n"
+        + "  \"byte\": 32,\n"
+        + "  \"boolean\": true,\n"
+        + "  \"short\": 100,\n"
+        + "  \"int\": 1,\n"
+        + "  \"long\": 43,\n"
+        + "  \"float\": 23.0,\n"
+        + "  \"double\": 3.141592653589793,\n"
+        + "  \"char\": \"a\",\n"
+        + "  \"String\": \"string\"\n"
         + "}");
   }
 
   @Test public void decodesPrimitives() throws IOException {
-    String json = "{"
-        + "\"byte\":32,"
-        + "\"boolean\":true,"
-        + "\"short\":100,"
-        + "\"int\":1,"
-        + "\"long\":43,"
-        + "\"float\":23.0,"
-        + "\"double\":3.141592653589793,"
-        + "\"char\":\"a\","
-        + "\"String\":\"string\""
+    String json = "{\n"
+        + "  \"byte\": 32,\n"
+        + "  \"boolean\": true,\n"
+        + "  \"short\": 100,\n"
+        + "  \"int\": 1,\n"
+        + "  \"long\": 43,\n"
+        + "  \"float\": 23.0,\n"
+        + "  \"double\": 3.141592653589793,\n"
+        + "  \"char\": \"a\",\n"
+        + "  \"String\": \"string\"\n"
         + "}";
 
     Map<String, Object> map = cartographer.fromJson(json);
@@ -76,6 +76,73 @@ public class CartographerTest {
         .contains(MapEntry.entry("double", Math.PI))
         .contains(MapEntry.entry("char", "a"))
         .contains(MapEntry.entry("String", "string"));
+  }
+
+  @Test public void prettyPrintDisabled() throws IOException {
+    Cartographer cartographer = new Cartographer.Builder().prettyPrint(false).build();
+    Map<String, Object> map = ImmutableMap.<String, Object>builder()
+        .put("a", ImmutableMap.<String, Object>builder()
+            .put("b", ImmutableMap.<String, Object>builder()
+                .put("c", ImmutableMap.<String, Object>builder()
+                    .put("d", ImmutableMap.<String, Object>builder().put("e", "f").build())
+                    .build())
+                .build())
+            .build())
+        .build();
+
+    assertThat(cartographer.toJson(map)) //
+        .isEqualTo("{\"a\":{\"b\":{\"c\":{\"d\":{\"e\":\"f\"}}}}}");
+  }
+
+  @Test public void encodesNestedMaps() throws IOException {
+    Map<String, Object> map = ImmutableMap.<String, Object>builder()
+        .put("a", ImmutableMap.<String, Object>builder()
+            .put("b", ImmutableMap.<String, Object>builder()
+                .put("c", ImmutableMap.<String, Object>builder()
+                    .put("d", ImmutableMap.<String, Object>builder().put("e", "f").build())
+                    .build())
+                .build())
+            .build())
+        .build();
+
+    assertThat(cartographer.toJson(map)).isEqualTo("{\n"
+        + "  \"a\": {\n"
+        + "    \"b\": {\n"
+        + "      \"c\": {\n"
+        + "        \"d\": {\n"
+        + "          \"e\": \"f\"\n"
+        + "        }\n"
+        + "      }\n"
+        + "    }\n"
+        + "  }\n"
+        + "}");
+  }
+
+  @Test public void decodesNestedMaps() throws IOException {
+    String json = "{\n"
+        + "  \"a\": {\n"
+        + "    \"b\": {\n"
+        + "      \"c\": {\n"
+        + "        \"d\": {\n"
+        + "          \"e\": \"f\"\n"
+        + "        }\n"
+        + "      }\n"
+        + "    }\n"
+        + "  }\n"
+        + "}";
+
+    Map<String, Object> map = cartographer.fromJson(json);
+    Map<String, Object> expected = ImmutableMap.<String, Object>builder()
+        .put("a", ImmutableMap.<String, Object>builder()
+            .put("b", ImmutableMap.<String, Object>builder()
+                .put("c", ImmutableMap.<String, Object>builder()
+                    .put("d", ImmutableMap.<String, Object>builder().put("e", "f").build())
+                    .build())
+                .build())
+            .build())
+        .build();
+
+    assertThat(map).isEqualTo(expected);
   }
 
   @Test public void disallowsEncodingNullMap() throws IOException {
@@ -136,14 +203,14 @@ public class CartographerTest {
 
     cartographer.toJson(map, writer);
 
-    assertThat(writer.toString()).isEqualTo("{"
-        + "\"byte\":127,"
-        + "\"short\":32767,"
-        + "\"int\":2147483647,"
-        + "\"long\":9223372036854775807,"
-        + "\"float\":3.4028235E38,"
-        + "\"double\":1.7976931348623157E308,"
-        + "\"char\":\"\uFFFF\""
+    assertThat(writer.toString()).isEqualTo("{\n"
+        + "  \"byte\": 127,\n"
+        + "  \"short\": 32767,\n"
+        + "  \"int\": 2147483647,\n"
+        + "  \"long\": 9223372036854775807,\n"
+        + "  \"float\": 3.4028235E38,\n"
+        + "  \"double\": 1.7976931348623157E308,\n"
+        + "  \"char\": \"\uFFFF\"\n"
         + "}");
   }
 
@@ -160,14 +227,14 @@ public class CartographerTest {
 
     cartographer.toJson(map, writer);
 
-    assertThat(writer.toString()).isEqualTo("{"
-        + "\"byte\":-128,"
-        + "\"short\":-32768,"
-        + "\"int\":-2147483648,"
-        + "\"long\":-9223372036854775808,"
-        + "\"float\":1.4E-45,"
-        + "\"double\":4.9E-324,"
-        + "\"char\":\"\\u0000\""
+    assertThat(writer.toString()).isEqualTo("{\n"
+        + "  \"byte\": -128,\n"
+        + "  \"short\": -32768,\n"
+        + "  \"int\": -2147483648,\n"
+        + "  \"long\": -9223372036854775808,\n"
+        + "  \"float\": 1.4E-45,\n"
+        + "  \"double\": 4.9E-324,\n"
+        + "  \"char\": \"\\u0000\"\n"
         + "}");
   }
 

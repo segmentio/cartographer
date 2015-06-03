@@ -43,9 +43,11 @@ import java.util.Map;
  */
 public class Cartographer {
   private final boolean isLenient;
+  private final boolean prettyPrint;
 
-  Cartographer(boolean isLenient) {
+  Cartographer(boolean isLenient, boolean prettyPrint) {
     this.isLenient = isLenient;
+    this.prettyPrint = prettyPrint;
   }
 
   /**
@@ -105,6 +107,9 @@ public class Cartographer {
 
     JsonWriter jsonWriter = new JsonWriter(writer);
     jsonWriter.setLenient(isLenient);
+    if (prettyPrint) {
+      jsonWriter.setIndent("  ");
+    }
     try {
       mapToWriter(map, jsonWriter);
     } finally {
@@ -204,6 +209,7 @@ public class Cartographer {
   /** Fluent API to construct instances of {@link Cartographer}. */
   public static class Builder {
     private boolean isLenient;
+    private boolean prettyPrint;
 
     /**
      * Configure this parser to be  be liberal in what it accepts. By default,
@@ -212,13 +218,22 @@ public class Cartographer {
      * JsonReader#setLenient(boolean)} for more details.
      * </ul>
      */
-    public Builder setLenient(boolean isLenient) {
+    public Builder lenient(boolean isLenient) {
       this.isLenient = isLenient;
       return this;
     }
 
+    /**
+     * Configures Cartographer to output Json that fits in a page for pretty printing. This option
+     * only affects Json serialization.
+     */
+    public Builder prettyPrint(boolean prettyPrint) {
+      this.prettyPrint = prettyPrint;
+      return this;
+    }
+
     public Cartographer build() {
-      return new Cartographer(isLenient);
+      return new Cartographer(isLenient, prettyPrint);
     }
   }
 }
