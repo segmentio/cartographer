@@ -150,26 +150,74 @@ public class CartographerTest {
     Map<String, Object> map =
         ImmutableMap.<String, Object>builder().put("a", Arrays.asList("b", "c", "d")).build();
 
-    assertThat(cartographer.toJson(map)).isEqualTo("{\n"
-        + "  \"a\": [\n"
-        + "    \"b\",\n"
-        + "    \"c\",\n"
-        + "    \"d\"\n"
-        + "  ]\n"
+    assertThat(cartographer.toJson(map)).isEqualTo("{\n" //
+        + "  \"a\": [\n" //
+        + "    \"b\",\n" //
+        + "    \"c\",\n" //
+        + "    \"d\"\n" //
+        + "  ]\n" //
         + "}");
   }
 
   @Test public void decodesArrays() throws IOException {
-    String json = "{\n"
-        + "  \"a\": [\n"
-        + "    \"b\",\n"
-        + "    \"c\",\n"
-        + "    \"d\"\n"
-        + "  ]\n"
+    String json = "{\n" //
+        + "  \"a\": [\n" //
+        + "    \"b\",\n" //
+        + "    \"c\",\n" //
+        + "    \"d\"\n" //
+        + "  ]\n" //
         + "}";
 
     Map<String, Object> expected =
         ImmutableMap.<String, Object>builder().put("a", Arrays.asList("b", "c", "d")).build();
+
+    assertThat(cartographer.fromJson(json)).isEqualTo(expected);
+  }
+
+  @Test public void encodesArrayOfMap() throws IOException {
+    Map<String, Object> map = ImmutableMap.<String, Object>builder()
+        .put("a", Arrays.<ImmutableMap>asList(
+            ImmutableMap.<String, Object>builder().put("b", "c").build(),
+            ImmutableMap.<String, Object>builder().put("b", "d").build(),
+            ImmutableMap.<String, Object>builder().put("b", "e").build()))
+        .build();
+
+    assertThat(cartographer.toJson(map)).isEqualTo("{\n"
+            + "  \"a\": [\n"
+            + "    {\n"
+            + "      \"b\": \"c\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "      \"b\": \"d\"\n"
+            + "    },\n"
+            + "    {\n"
+            + "      \"b\": \"e\"\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}");
+  }
+
+  @Test public void decodesArrayOfMap() throws IOException {
+    String json = "{\n"
+        + "  \"a\": [\n"
+        + "    {\n"
+        + "      \"b\": \"c\"\n"
+        + "    },\n"
+        + "    {\n"
+        + "      \"b\": \"d\"\n"
+        + "    },\n"
+        + "    {\n"
+        + "      \"b\": \"e\"\n"
+        + "    }\n"
+        + "  ]\n"
+        + "}";
+
+    Map<String, Object> expected = ImmutableMap.<String, Object>builder()
+        .put("a", Arrays.<ImmutableMap>asList(
+            ImmutableMap.<String, Object>builder().put("b", "c").build(),
+            ImmutableMap.<String, Object>builder().put("b", "d").build(),
+            ImmutableMap.<String, Object>builder().put("b", "e").build()))
+        .build();
 
     assertThat(cartographer.fromJson(json)).isEqualTo(expected);
   }
