@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Cartographer creates {@link Map} from JSON encoded streams. Use {@link Builder} to construct
- * instances.
+ * Cartographer creates {@link Map} objects from JSON encoded streams and decodes {@link Map}
+ * objects into JSON streams. Use {@link Builder} to construct instances.
  */
 public class Cartographer {
   private final boolean isLenient;
@@ -193,6 +193,13 @@ public class Cartographer {
   public static class Builder {
     private boolean isLenient;
 
+    /**
+     * Configure this parser to be  be liberal in what it accepts. By default,
+     * this parser is strict and only accepts JSON as specified by <a
+     * href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>. See {@link
+     * JsonReader#setLenient(boolean)} for more details.
+     * </ul>
+     */
     public Builder setLenient(boolean isLenient) {
       this.isLenient = isLenient;
       return this;
