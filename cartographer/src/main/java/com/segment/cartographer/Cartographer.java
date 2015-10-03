@@ -87,9 +87,13 @@ public class Cartographer {
    * write the json to {@link Writer} instead of retrieving it as a String, use {@link #toJson(Map,
    * Writer)} instead.
    */
-  public String toJson(Map<?, ?> map) throws IOException {
+  public String toJson(Map<?, ?> map) {
     StringWriter stringWriter = new StringWriter();
-    toJson(map, stringWriter);
+    try {
+      toJson(map, stringWriter);
+    } catch (IOException e) {
+      throw new AssertionError(e); // No I/O writing to a Buffer.
+    }
     return stringWriter.toString();
   }
 
