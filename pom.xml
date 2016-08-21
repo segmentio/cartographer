@@ -11,7 +11,7 @@
 
   <groupId>com.segment.cartographer</groupId>
   <artifactId>cartographer-parent</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Cartographer (Parent)</name>
@@ -44,7 +44,7 @@
     <connection>scm:git:git://github.com/segmentio/cartographer.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/segmentio/cartographer.git
     </developerConnection>
-    <tag>cartographer-parent-1.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
