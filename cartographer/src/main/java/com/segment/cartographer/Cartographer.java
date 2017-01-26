@@ -189,6 +189,15 @@ public class Cartographer {
     writer.endArray();
   }
 
+  /** Print the json representation of an array to the given writer. */
+  private static void arrayToWriter(Object[] array, JsonWriter writer) throws IOException {
+    writer.beginArray();
+    for (Object value : array) {
+      writeValue(value, writer);
+    }
+    writer.endArray();
+  }
+
   /**
    * Writes the given {@link Object} to the {@link JsonWriter}.
    *
@@ -205,6 +214,8 @@ public class Cartographer {
       listToWriter((List) value, writer);
     } else if (value instanceof Map) {
       mapToWriter((Map) value, writer);
+    } else if (value.getClass().isArray()) {
+      arrayToWriter((Object[]) value, writer);
     } else {
       writer.value(String.valueOf(value));
     }

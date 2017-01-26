@@ -146,7 +146,7 @@ public class CartographerTest {
     assertThat(map).isEqualTo(expected);
   }
 
-  @Test public void encodesArrays() throws IOException {
+  @Test public void encodesArraysWithLists() throws IOException {
     Map<String, Object> map =
         ImmutableMap.<String, Object>builder().put("a", Arrays.asList("b", "c", "d")).build();
 
@@ -159,7 +159,35 @@ public class CartographerTest {
         + "}");
   }
 
-  @Test public void decodesArrays() throws IOException {
+  @Test public void decodesArraysWithLists() throws IOException {
+    String json = "{\n" //
+        + "  \"a\": [\n" //
+        + "    \"b\",\n" //
+        + "    \"c\",\n" //
+        + "    \"d\"\n" //
+        + "  ]\n" //
+        + "}";
+
+    Map<String, Object> expected =
+        ImmutableMap.<String, Object>builder().put("a", Arrays.asList("b", "c", "d")).build();
+
+    assertThat(cartographer.fromJson(json)).isEqualTo(expected);
+  }
+
+  @Test public void encodesArraysWithArrays() throws IOException {
+    Map<String, Object> map =
+        ImmutableMap.<String, Object>builder().put("a", new String[] { "b", "c", "d" }).build();
+
+    assertThat(cartographer.toJson(map)).isEqualTo("{\n" //
+        + "  \"a\": [\n" //
+        + "    \"b\",\n" //
+        + "    \"c\",\n" //
+        + "    \"d\"\n" //
+        + "  ]\n" //
+        + "}");
+  }
+
+  @Test public void decodesArraysWithArraysAsLists() throws IOException {
     String json = "{\n" //
         + "  \"a\": [\n" //
         + "    \"b\",\n" //
