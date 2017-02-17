@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 public class JsonEncodingBenchmark extends SimpleBenchmark {
 
-  @Param(value = { "small", "action_label" }) String fixture;
+  @Param(value = {"small", "action_label"}) String fixture;
   Map<String, ?> map;
   String blackHole;
 
@@ -24,8 +24,12 @@ public class JsonEncodingBenchmark extends SimpleBenchmark {
   }
 
   static Map<String, ?> mapFor(String name) {
-    if (name.equals("small")) return Maps.SMALL;
-    if (name.equals("action_label")) return Maps.ACTION_LABEL;
+    if ("small".equals(name)) {
+      return Maps.SMALL;
+    }
+    if ("action_label".equals(name)) {
+      return Maps.ACTION_LABEL;
+    }
     throw new IllegalArgumentException("unknown name: " + name);
   }
 

@@ -20,8 +20,12 @@ public class JsonDecodingBenchmark extends SimpleBenchmark {
   }
 
   static String jsonFor(String name) {
-    if (name.equals("small")) return Json.SMALL;
-    if (name.equals("action_label")) return Json.ACTION_LABEL;
+    if ("small".equals(name)) {
+      return Json.SMALL;
+    }
+    if ("action_label".equals(name)) {
+      return Json.ACTION_LABEL;
+    }
     throw new IllegalArgumentException("unknown name: " + name);
   }
 
