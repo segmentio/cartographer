@@ -36,12 +36,12 @@ Download [the latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>com.segment.cartographer</groupId>
   <artifactId>cartographer</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.segment.cartographer:cartographer:1.0.0'
+compile 'com.segment.cartographer:cartographer:1.0.1'
 ```
 
 
